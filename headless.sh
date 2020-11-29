@@ -3,19 +3,19 @@
 OSK="ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"
 VMDIR=$PWD
 OVMF=$VMDIR/firmware
-
+HEADLESS=1
 [[ -z "$MEM" ]] && {
 	MEM="1G"
 }
 
 [[ -z "$CPUS" ]] && {
-	CPUS=1
+	CPUS=4
 }
 
-[[ -z "$SYSTEM_DISK" ]] && {
-    echo "Please set the SYSTEM_DISK environment variable"
-    exit 1
-}
+#[[ -z "$SYSTEM_DISK" ]] && {
+#    echo "Please set the SYSTEM_DISK environment variable"
+#    exit 1
+#}
 
 [[ -r "$SYSTEM_DISK" ]] || {
     echo "Can't read system disk image: $SYSTEM_DISK"
@@ -45,8 +45,6 @@ qemu-system-x86_64 \
     -device ich9-ahci,id=sata \
     -drive id=ESP,if=none,format=qcow2,file=ESP.qcow2 \
     -device ide-hd,bus=sata.2,drive=ESP \
-    -drive id=InstallMedia,format=raw,if=none,file=BaseSystem.img \
-    -device ide-hd,bus=sata.3,drive=InstallMedia \
-    -drive id=SystemDisk,if=none,file="${SYSTEM_DISK}" \
+    -drive id=SystemDisk,if=none,file=Catalina.qcow2 \
     -device ide-hd,bus=sata.4,drive=SystemDisk \
     "${MOREARGS[@]}"
